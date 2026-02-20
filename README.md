@@ -1,8 +1,6 @@
 # Higgs_b_bbar_LHeC_LHmuC
 Higgs_b_bbar_LHeC_LHmuC
 
-# Higgs_b_bbar_LHeC_LHmuC
-
 **Sensitivity comparison: LHeC vs LHμC to SMEFT (dim-6) operators in the Higgs–bottom sector** using charged-current Higgs production in lepton–proton collisions:
 \[
 \ell^- p \to h\,j\,\nu_\ell,\qquad h\to b\bar b,\quad \ell=e,\mu
