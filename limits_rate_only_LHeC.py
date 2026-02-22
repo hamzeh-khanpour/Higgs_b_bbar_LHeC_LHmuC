@@ -1,3 +1,7 @@
+
+#  python limits_rate_only_LHeC.py --save --outdir plots_limits_LHeC
+
+
 import numpy as np
 import math
 import argparse
