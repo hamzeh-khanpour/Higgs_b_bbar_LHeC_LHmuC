@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# python Higgs_b_bbar_LHeC_LHmuC.py --save --outdir plots_LHeC --tag LHeC_E50 --pt-max 300
+# Example:
+#   python Higgs_b_bbar_LHeC_LHmuC_plots_LHmuC.py --save --outdir plots_LHmuC --tag LHmuC_Emu500 --pt-max 600
 
 import math
 import gzip
@@ -20,21 +21,24 @@ try:
 except Exception:
     pass
 
+
 # -----------------------------
-# User inputs: your LHE paths
+# LHmuC: user inputs (your LHE paths)
 # -----------------------------
 SAMPLES = [
     ("SM",
-     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_E500_CChiggsbb_SM/Events/run_01/LHeC_E500_CChiggsbb_SM.lhe"),
+     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_Emu500_CChiggsbb_SM/Events/run_01/LHmuC_Emu500_CChiggsbb_SM.lhe"),
     ("EFT CP-even (TR≠0, TI=0)",
-     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_E500_CChiggsbb_EFT_CP_even_TR/Events/run_01/LHeC_E500_CChiggsbb_EFT_CP_even_TR.lhe"),
+     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_Emu500_CChiggsbb_EFT_CP_even_TR/Events/run_01/LHmuC_Emu500_CChiggsbb_EFT_CP_even_TR.lhe"),
     ("EFT CP-odd (TR=0, TI≠0)",
-     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_E500_CChiggsbb_EFT_CP_odd_TI/Events/run_01/LHeC_E500_CChiggsbb_EFT_CP_odd_TI.lhe"),
+     "/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_Emu500_CChiggsbb_EFT_CP_odd_TI/Events/run_01/LHmuC_Emu500_CChiggsbb_EFT_CP_odd_TI.lhe"),
 ]
 
-TOP_TITLE_PT  = r"LHeC: $e^- p \to \nu_e\, h\, j$"
-TOP_TITLE_MBB = r"LHeC: $e^- p \to \nu_e\, h\, j$"
+# Titles updated for mu+ p and Emu=500
+TOP_TITLE_PT  = r"LH$\mu$C: $\mu^+ p \to \bar{\nu}_\mu\, h\, j$"
+TOP_TITLE_MBB = r"LH$\mu$C: $\mu^+ p \to \bar{\nu}_\mu\, h\, j$"
 SUBTITLE      = r"$h\to b\bar b$ (MG/LHE level, decay in ME)"
+
 
 # -----------------------------
 # Helpers: open text (gz or not)
@@ -44,6 +48,7 @@ def open_text(path):
     if path.endswith(".gz"):
         return gzip.open(path, "rt", encoding="utf-8", errors="ignore")
     return open(path, "rt", encoding="utf-8", errors="ignore")
+
 
 # -----------------------------
 # Parse xsec from <init> block (pb)
@@ -78,16 +83,16 @@ def read_lhe_xsec_pb(filepath):
         xsec_total += float(parts[0])  # XSECUP
     return xsec_total
 
+
 # -----------------------------
-# Robust parse (tr, ti) from BLOCK ALPPARS in the pre-event part of the LHE
-# Fix: stop at next BLOCK/DECAY/<...> so we DON'T accidentally read other blocks.
+# Robust parse (TR, TI) from BLOCK ALPPARS in the pre-event part of the LHE
 # -----------------------------
 RE_BLOCK_ALPPARS = re.compile(r"^\s*BLOCK\s+ALPPARS\b", re.IGNORECASE)
 RE_BLOCK_ANY     = re.compile(r"^\s*BLOCK\b", re.IGNORECASE)
 RE_DECAY_ANY     = re.compile(r"^\s*DECAY\b", re.IGNORECASE)
 
 def read_tr_ti_from_lhe(filepath):
-    # Read only the header/slha part (everything before the first <event>)
+    # Read only the part before the first <event>
     pre_lines = []
     with open_text(filepath) as f:
         for line in f:
@@ -101,7 +106,6 @@ def read_tr_ti_from_lhe(filepath):
     for line in pre_lines:
         s = line.strip()
 
-        # enter ALPPARS block
         if RE_BLOCK_ALPPARS.match(s):
             in_alppars = True
             continue
@@ -109,15 +113,13 @@ def read_tr_ti_from_lhe(filepath):
         if not in_alppars:
             continue
 
-        # if we hit a new SLHA block / DECAY / XML tag, ALPPARS block is over
+        # stop when ALPPARS block ends
         if RE_BLOCK_ANY.match(s) or RE_DECAY_ANY.match(s) or s.startswith("<"):
             break
 
-        # ignore blanks/comments
         if not s or s.startswith("#"):
             continue
 
-        # remove inline comments
         s_nocom = s.split("#", 1)[0].strip()
         parts = s_nocom.split()
         if len(parts) < 2:
@@ -139,6 +141,7 @@ def read_tr_ti_from_lhe(filepath):
 
     return tr, ti
 
+
 def fmt_param(x):
     if x is None:
         return "0"
@@ -146,13 +149,14 @@ def fmt_param(x):
         return "0"
     return f"{x:.3g}"
 
+
 def fmt_tr_ti(tr, ti):
-    # return floats for internal use, but safe defaults
     if tr is None:
         tr = 0.0
     if ti is None:
         ti = 0.0
     return tr, ti
+
 
 # -----------------------------
 # Event iterator (streaming)
@@ -196,8 +200,10 @@ def iter_lhe_events(filepath):
 
                 yield xwgtup, particles
 
+
 def pt(px, py):
     return math.hypot(px, py)
+
 
 def invmass(p1, p2):
     E  = p1["E"]  + p2["E"]
@@ -207,8 +213,9 @@ def invmass(p1, p2):
     m2 = E*E - (px*px + py*py + pz*pz)
     return math.sqrt(m2) if m2 > 0 else 0.0
 
+
 # -----------------------------
-# Extract observables
+# Extract observables:
 # - leading b pT from Higgs decay
 # - m_bb from Higgs decay
 # -----------------------------
@@ -223,10 +230,8 @@ def extract_observables(filepath):
     for w_evt, parts in iter_lhe_events(filepath):
         sum_w_raw += w_evt
 
-        # Higgs indices (1-based for mother pointers)
         higgs_indices = [i for i, p in enumerate(parts, start=1) if p["id"] == 25]
 
-        # b/bbar final-state candidates from Higgs
         b_from_h = []
         for i, p in enumerate(parts, start=1):
             if p["status"] != 1:
@@ -236,7 +241,7 @@ def extract_observables(filepath):
             if (p["m1"] in higgs_indices) or (p["m2"] in higgs_indices):
                 b_from_h.append(p)
 
-        # Fallback: first two final-state b's
+        # Fallback (shouldn't happen with decay chain)
         if len(b_from_h) < 2:
             b_all = [p for p in parts if p["status"] == 1 and abs(p["id"]) == 5]
             if len(b_all) >= 2:
@@ -257,7 +262,6 @@ def extract_observables(filepath):
     mbb_arr  = np.asarray(mbb_list, float)
     w_raw    = np.asarray(w_raw_list, float)
 
-    # Scale weights so sum(w_scaled)=xsec_pb
     scale = xsec_pb / sum_w_raw if sum_w_raw != 0 else 0.0
     info = {
         "xsec_pb": float(xsec_pb),
@@ -268,9 +272,9 @@ def extract_observables(filepath):
     }
     return ptb1_arr, mbb_arr, w_raw, info
 
+
 # -----------------------------
 # Histogram to dsigma/dx with stat errors (pb/GeV)
-# Using sum w and sum w^2 per bin
 # -----------------------------
 def hist_dsig(values, w_raw, scale, edges):
     values = np.asarray(values, float)
@@ -282,6 +286,7 @@ def hist_dsig(values, w_raw, scale, edges):
     dy = np.divide(np.sqrt(H2), widths, out=np.zeros_like(H2, dtype=float), where=widths > 0)
     return y, dy
 
+
 def ratio_with_err(num, den, dnum, dden):
     R = np.divide(num, den, out=np.full_like(num, np.nan, dtype=float), where=(den > 0))
     dR = np.full_like(R, np.nan, dtype=float)
@@ -289,10 +294,12 @@ def ratio_with_err(num, den, dnum, dden):
     dR[mask] = R[mask] * np.sqrt((dnum[mask]/num[mask])**2 + (dden[mask]/den[mask])**2)
     return R, dR
 
+
 def step_with_plateau(edges, y):
     x = np.r_[edges[:-1], edges[-1]]
     yy = np.r_[y, y[-1] if len(y) else 0.0]
     return x, yy
+
 
 def annotate_panel(ax, lines, fontsize=16):
     txt = "\n".join(lines)
@@ -301,6 +308,7 @@ def annotate_panel(ax, lines, fontsize=16):
         va="top", ha="left", fontsize=fontsize,
         bbox=dict(fc=(1, 1, 1, 0), ec=(1, 1, 1, 1), linewidth=2)
     )
+
 
 def plot_cms_like(
     out_prefix: Path,
@@ -376,7 +384,6 @@ def plot_cms_like(
     rax.set_ylim(0.0, 1.8)
     rax.legend(fontsize=10, loc="best")
 
-    # Avoid tight_layout warning with GridSpec
     fig.subplots_adjust(left=0.11, right=0.98, top=0.92, bottom=0.08, hspace=0.10)
 
     if save:
@@ -388,11 +395,12 @@ def plot_cms_like(
 
     return fig
 
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--save", action="store_true", help="Save plots as PDF+PNG.")
-    ap.add_argument("--outdir", default="plots", help="Output directory.")
-    ap.add_argument("--tag", default="LHeC_E50", help="Filename prefix/tag.")
+    ap.add_argument("--outdir", default="plots_LHmuC", help="Output directory.")
+    ap.add_argument("--tag", default="LHmuC_Emu500", help="Filename prefix/tag.")
     ap.add_argument("--pt-bins", type=int, default=60, help="Number of pT bins.")
     ap.add_argument("--pt-max", type=float, default=-1.0, help="Max pT (GeV). If <0, auto from data.")
     ap.add_argument("--mbb-bins", type=int, default=70, help="Number of Mbb bins.")
@@ -411,10 +419,10 @@ def main():
             raise FileNotFoundError(f"Missing file: {path}")
 
         ptb1, mbb, w_raw, info = extract_observables(str(path))
+        TR_s = fmt_param(info["tr"])
+        TI_s = fmt_param(info["ti"])
 
-        tr_s = fmt_param(info["tr"])
-        ti_s = fmt_param(info["ti"])
-        print(f"{label:28s}  xsec={info['xsec_pb']:.6g} pb  TR={tr_s}, TI={ti_s}  events_used={info['events_used']}")
+        print(f"{label:28s}  xsec={info['xsec_pb']:.6g} pb  TR={TR_s}, TI={TI_s}  events_used={info['events_used']}")
 
         samples.append({
             "label": label,
@@ -447,10 +455,10 @@ def main():
         ls = "--" if is_sm else "-"
         lw = 2.8
 
-        tr_s = fmt_param(s["tr"])
-        ti_s = fmt_param(s["ti"])
+        TR_s = fmt_param(s["tr"])
+        TI_s = fmt_param(s["ti"])
         annot = (rf"{s['label']}:  $\sigma_{{gen}}={s['xsec_pb']:.4g}\ \mathrm{{pb}}$, "
-                 rf"$TR={tr_s}$, $TI={ti_s}$")
+                 rf"$TR={TR_s}$, $TI={TI_s}$")
 
         curves_pt.append({"label": s["label"], "y": y_pt, "dy": dy_pt, "ls": ls, "lw": lw, "annot": annot})
         curves_mbb.append({"label": s["label"], "y": y_m,  "dy": dy_m,  "ls": ls, "lw": lw, "annot": annot})
@@ -487,6 +495,7 @@ def main():
     )
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()

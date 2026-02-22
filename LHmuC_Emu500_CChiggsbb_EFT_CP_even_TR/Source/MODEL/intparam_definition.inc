@@ -1,0 +1,239 @@
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c      written by the UFO converter
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+C     Parameters that should not be recomputed event by event.
+C     
+      IF(READLHA) THEN
+
+        G = 2 * DSQRT(AS*PI)  ! for the first init
+
+        MDL_MBBARMB = 4.272850D+00
+
+        MDL_NF = 5.000000D+00
+
+        MDL_LAMBDAQCD5 = 2.160000D-01
+
+        MDL_COS__CABI = COS(MDL_CABI)
+
+        MDL_CKM1X1 = MDL_COS__CABI
+
+        MDL_SIN__CABI = SIN(MDL_CABI)
+
+        MDL_CKM1X2 = MDL_SIN__CABI
+
+        MDL_CKM1X3 = 0.000000D+00
+
+        MDL_CKM2X1 = -MDL_SIN__CABI
+
+        MDL_CKM2X2 = MDL_COS__CABI
+
+        MDL_CKM2X3 = 0.000000D+00
+
+        MDL_CKM3X1 = 0.000000D+00
+
+        MDL_CKM3X2 = 0.000000D+00
+
+        MDL_CKM3X3 = 1.000000D+00
+
+        MDL_BETA0 = 1.100000D+01-(2.000000D+00*MDL_NF)/3.000000D+00
+
+        MDL_BETA1 = 5.100000D+01-(1.900000D+01*MDL_NF)/3.000000D+00
+
+        MDL_NF__EXP__2 = MDL_NF**2
+
+        MDL_BETA2 = 2.857000D+03-(5.033000D+03*MDL_NF)/9.000000D+00
+     $   +(3.250000D+02*MDL_NF__EXP__2)/2.700000D+01
+
+        MDL_MB__EXP__2 = MDL_MB**2
+
+        MDL_LAMBDAQCD5__EXP__2 = MDL_LAMBDAQCD5**2
+
+        MDL_LMUMB = LOG(MDL_MB__EXP__2/MDL_LAMBDAQCD5__EXP__2)
+
+        MDL_MH__EXP__2 = MDL_MH**2
+
+        MDL_LMUMH = LOG(MDL_MH__EXP__2/MDL_LAMBDAQCD5__EXP__2)
+
+        MDL_MZ__EXP__2 = MDL_MZ**2
+
+        MDL_MZ__EXP__4 = MDL_MZ**4
+
+        MDL_SQRT__2 = SQRT(DCMPLX(2.000000D+00))
+
+        MDL_BETA1__EXP__2 = MDL_BETA1**2
+
+        MDL_BETA0__EXP__4 = MDL_BETA0**4
+
+        MDL_LMUMB__EXP__2 = MDL_LMUMB**2
+
+        MDL_BETA0__EXP__2 = MDL_BETA0**2
+
+        MDL_LOG__LMUMB = LOG(MDL_LMUMB)
+
+        MDL_ALPHASBARMB = (4.000000D+00*PI*(1.000000D+00+(4.000000D+00
+     $   *MDL_BETA1__EXP__2*(-1.250000D+00+(MDL_BETA0*MDL_BETA2)
+     $   /(8.000000D+00*MDL_BETA1__EXP__2)+(-5.000000D-01
+     $   +MDL_LOG__LMUMB)**2))/(MDL_BETA0__EXP__4*MDL_LMUMB__EXP__2)
+     $   -(2.000000D+00*MDL_BETA1*MDL_LOG__LMUMB)/(MDL_BETA0__EXP__2
+     $   *MDL_LMUMB)))/(MDL_BETA0*MDL_LMUMB)
+
+        MDL_LMUMH__EXP__2 = MDL_LMUMH**2
+
+        MDL_LOG__LMUMH = LOG(MDL_LMUMH)
+
+        MDL_ALPHASBARMH = (4.000000D+00*PI*(1.000000D+00+(4.000000D+00
+     $   *MDL_BETA1__EXP__2*(-1.250000D+00+(MDL_BETA0*MDL_BETA2)
+     $   /(8.000000D+00*MDL_BETA1__EXP__2)+(-5.000000D-01
+     $   +MDL_LOG__LMUMH)**2))/(MDL_BETA0__EXP__4*MDL_LMUMH__EXP__2)
+     $   -(2.000000D+00*MDL_BETA1*MDL_LOG__LMUMH)/(MDL_BETA0__EXP__2
+     $   *MDL_LMUMH)))/(MDL_BETA0*MDL_LMUMH)
+
+        MDL_XC1B = MDL_ALPHASBARMH/PI
+
+        MDL_XC2B = MDL_ALPHASBARMB/PI
+
+        MDL_XC1B__EXP__0_52174 = MDL_XC1B**5.217400D-01
+
+        MDL_XC1B__EXP__2 = MDL_XC1B**2
+
+        MDL_XC1B__EXP__3 = MDL_XC1B**3
+
+        MDL_C1B = 2.015929D+00*MDL_XC1B__EXP__0_52174*(1.000000D+00
+     $   +1.175000D+00*MDL_XC1B+1.501000D+00*MDL_XC1B__EXP__2
+     $   +1.725000D-01*MDL_XC1B__EXP__3)
+
+        MDL_XC2B__EXP__0_52174 = MDL_XC2B**5.217400D-01
+
+        MDL_XC2B__EXP__2 = MDL_XC2B**2
+
+        MDL_XC2B__EXP__3 = MDL_XC2B**3
+
+        MDL_C2B = 2.015929D+00*MDL_XC2B__EXP__0_52174*(1.000000D+00
+     $   +1.175000D+00*MDL_XC2B+1.501000D+00*MDL_XC2B__EXP__2
+     $   +1.725000D-01*MDL_XC2B__EXP__3)
+
+        MDL_MBBARMH = (MDL_C1B*MDL_MBBARMB)/MDL_C2B
+
+        MDL_ALPHASBARMH__EXP__2 = MDL_ALPHASBARMH**2
+
+        MDL_MBBARMH__EXP__2 = MDL_MBBARMH**2
+
+        MDL_MT__EXP__2 = MDL_MT**2
+
+        MDL_DELTAQCDB = (1.700000D+01*MDL_ALPHASBARMH)/(3.000000D+00
+     $   *PI)+(MDL_ALPHASBARMH__EXP__2*(3.594000D+01-1.360000D+00
+     $   *MDL_NF))/PI**2+(MDL_ALPHASBARMH__EXP__2*(1.570000D+00
+     $   +LOG(MDL_MBBARMH__EXP__2/MDL_MH__EXP__2)/9.000000D+00
+     $   -(2.000000D+00*LOG(MDL_MH__EXP__2/MDL_MT__EXP__2))/3.000000D
+     $   +00))/PI**2
+
+        MDL_WIDTHHBB = (3.000000D+00*(1.000000D+00+MDL_DELTAQCDB)
+     $   *MDL_GF*MDL_MBBARMH__EXP__2*MDL_MH*SQRT(DCMPLX(1.000000D+00
+     $   -(4.000000D+00*MDL_MB__EXP__2)/MDL_MH__EXP__2)))/(4.000000D
+     $   +00*PI*MDL_SQRT__2)
+
+        MDL_TI__EXP__2 = MDL_TI**2
+
+        MDL_TR__EXP__2 = MDL_TR**2
+
+        MDL_WIDTHHBBBSM = (9.000000D+00*MDL_TI__EXP__2+6.000000D+00
+     $   *MDL_TR+9.000000D+00*MDL_TR__EXP__2)*MDL_WIDTHHBB
+
+        MDL_WH = 4.120000D-03+MDL_WIDTHHBBBSM
+
+        MDL_COMPLEXI = DCMPLX(0.000000D+00,1.000000D+00)
+
+        MDL_CONJG__CKM1X1 = CONJG(DCMPLX(MDL_CKM1X1))
+
+        MDL_CONJG__CKM1X2 = CONJG(DCMPLX(MDL_CKM1X2))
+
+        MDL_CONJG__CKM1X3 = CONJG(DCMPLX(MDL_CKM1X3))
+
+        MDL_CONJG__CKM2X1 = CONJG(DCMPLX(MDL_CKM2X1))
+
+        MDL_CONJG__CKM2X2 = CONJG(DCMPLX(MDL_CKM2X2))
+
+        MDL_CONJG__CKM2X3 = CONJG(DCMPLX(MDL_CKM2X3))
+
+        MDL_CONJG__CKM3X1 = CONJG(DCMPLX(MDL_CKM3X1))
+
+        MDL_CONJG__CKM3X2 = CONJG(DCMPLX(MDL_CKM3X2))
+
+        MDL_CONJG__CKM3X3 = CONJG(DCMPLX(MDL_CKM3X3))
+
+        MDL_AEW = 1.000000D+00/AEWM1
+
+        MDL_MW = SQRT(DCMPLX(MDL_MZ__EXP__2/2.000000D+00
+     $   +SQRT(DCMPLX(MDL_MZ__EXP__4/4.000000D+00-(MDL_AEW*PI
+     $   *MDL_MZ__EXP__2)/(MDL_GF*MDL_SQRT__2)))))
+
+        MDL_SQRT__AEW = SQRT(DCMPLX(MDL_AEW))
+
+        MDL_EE = 2.000000D+00*MDL_SQRT__AEW*SQRT(DCMPLX(PI))
+
+        MDL_MW__EXP__2 = MDL_MW**2
+
+        MDL_SW2 = 1.000000D+00-MDL_MW__EXP__2/MDL_MZ__EXP__2
+
+        MDL_CW = SQRT(DCMPLX(1.000000D+00-MDL_SW2))
+
+        MDL_SQRT__SW2 = SQRT(DCMPLX(MDL_SW2))
+
+        MDL_SW = MDL_SQRT__SW2
+
+        MDL_G1 = MDL_EE/MDL_CW
+
+        MDL_GW = MDL_EE/MDL_SW
+
+        MDL_VEV = (2.000000D+00*MDL_MW*MDL_SW)/MDL_EE
+
+        MDL_VEV__EXP__2 = MDL_VEV**2
+
+        MDL_LAM = MDL_MH__EXP__2/(2.000000D+00*MDL_VEV__EXP__2)
+
+        MDL_YB = (MDL_YMB*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YC = (MDL_YMC*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YDO = (MDL_YMDO*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YE = (MDL_YME*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YM = (MDL_YMM*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YS = (MDL_YMS*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YT = (MDL_YMT*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YTAU = (MDL_YMTAU*MDL_SQRT__2)/MDL_VEV
+
+        MDL_YUP = (MDL_YMUP*MDL_SQRT__2)/MDL_VEV
+
+        MDL_MUH = SQRT(DCMPLX(MDL_LAM*MDL_VEV__EXP__2))
+
+        MDL_EE__EXP__2 = MDL_EE**2
+
+        MDL_SW__EXP__2 = MDL_SW**2
+
+        MDL_CW__EXP__2 = MDL_CW**2
+
+      ENDIF
+C     
+C     Parameters that should be recomputed at an event by even basis.
+C     
+      AS = G**2/4/PI
+
+      MDL_SQRT__AS = SQRT(DCMPLX(AS))
+
+      MDL_G__EXP__2 = G**2
+
+C     
+C     Parameters that should be updated for the loops.
+C     
+C     
+C     Definition of the EW coupling used in the write out of aqed
+C     
+      GAL(1) = 3.5449077018110318D0 / DSQRT(ABS(AEWM1))
+      GAL(2) = 1D0
+

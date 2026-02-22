@@ -1,0 +1,1 @@
+/home/hamzeh-khanpour/MG5_aMC_v3_6_6/LHmuC_Emu500_CChiggsbb_SM/SubProcesses/P1_bmup_vlhc_h_bbx/matrix1_orig.f
